@@ -1,12 +1,18 @@
 class ArticlesController < ApplicationController
   include ArticlesHelper
 
+  before_action :require_login, except: [:index, :show]
+
   def index
     @articles = Article.all
   end
 
   def new
-    @article = Article.new
+    if logged_in?
+      @article = Article.new
+    else
+      redirect_to articles_path
+    end
   end
 
   def create
